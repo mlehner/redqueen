@@ -1,0 +1,7 @@
+change the URL in:
+  reader.php exec lines
+  midori/config file homepage= line
+
+  gcc trigger.c -o trigger
+  sudo chown root:root trigger
+  sudo chmod a+s trigger

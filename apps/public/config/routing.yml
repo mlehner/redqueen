@@ -1,0 +1,46 @@
+#############################
+# home routes
+#############################
+door:
+  url: /door
+  param: { module: home, action: door }
+
+register:
+  url: /register
+  param: { module: home, action: register }
+
+login:
+  url: /login
+  param: { module: home, action: login }
+
+rfid:
+  url: /rfid
+  param: { module: home, action: rfid }
+  
+pin:
+  url: /pin
+  param: { module: home, action: pin }
+  
+open:
+  url: /open
+  param: { module: home, action: open }
+
+#############################
+# default rules
+#############################
+homepage:
+  url:   /
+  param: { module: home, action: index }
+
+change_password:
+  url:  /account/change-password
+  param: { module: account, action: changePassword }
+
+
+
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*

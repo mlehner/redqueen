@@ -1,0 +1,11 @@
+all:
+    ldap_host: #
+    ldap_use_tls: true
+    ldap_base_dn: #
+    ldap_admin_dn: #
+    ldap_admin_password: #
+
+    twitter_username: #
+    twitter_password: #
+
+    encrypt_key: #

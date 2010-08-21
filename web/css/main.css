@@ -1,0 +1,26 @@
+form ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+form ul li {
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+form ul.error_list li {
+    color: #f00;
+}
+
+form ul li label {
+    font-weight: bold;
+    display: block;
+    width: 150px;
+    float: left;
+}
+
+form ul li span.help {
+    font-size: .9em;
+    margin-left: 10px;
+}

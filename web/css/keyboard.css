@@ -1,0 +1,113 @@
+#keyboard {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: Tahoma, sans-serif;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: bold;
+}
+#keyboard .letter {
+  text-transform: none;
+  font-size: 18px;
+  font-weight: normal;
+}
+#keyboard .symbol {
+  font-size: 18px;
+  font-weight: normal;
+}
+#keyboard li {
+  float: left;
+  margin: 0 5px 5px 0;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  background: #aaa;
+  border: 1px solid #f9f9f9;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+}
+#keyboard .capslock, #keyboard .tab, #keyboard .left-shift {
+  clear: left;
+}
+#keyboard .tab, #keyboard .delete {
+  width: 70px;
+}
+#keyboard .capslock {
+  width: 100px;
+}
+#keyboard .return {
+  width: 67px;
+}
+#keyboard .left-shift {
+  width: 109px;
+}
+#keyboard .right-shift {
+  width: 110px;
+}
+#keyboard .lastitem {
+  margin-right: 0;
+}
+#keyboard .uppercase {
+  text-transform: uppercase;
+}
+#keyboard .space {
+  clear: left;
+  width: 746px;
+}
+#keyboard .on {
+  display: none;
+}
+#keyboard li.click {
+  background: #333;
+  color: #fff;
+  border-color: #e5e5e5;
+}
+#keypad {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: Tahoma, sans-serif;
+  font-size: 42px;
+  width: 390px;
+  text-transform: uppercase;
+  position: absolute;
+  top: 51px;
+  left: 365px;
+}
+#keypad li {
+  float: left;
+  margin: 0 5px 5px 0;
+  width: 120px;
+  height: 120px;
+  line-height: 130px;
+  text-align: center;
+  background: #aaa;
+  border: 1px solid #f9f9f9;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+}
+#keypad .delete, #keypad .return {
+  font-size: 28px;
+}
+#keypad li.click {
+  background: #333;
+  color: #fff;
+  border-color: #e5e5e5;
+}
+#keyboard.uppercase li.letter {
+  text-transform: uppercase;
+}
+#keyboard.symbols li.symbol span.on {
+  display: inline;
+}
+#keyboard.symbols li.symbol span.off {
+  display: none;
+}

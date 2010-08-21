@@ -1,0 +1,31 @@
+body {
+  margin: 20px 15px 20px 25px;
+  width: 748px;
+  height: 560px;
+  border: 1px solid black;
+  background: url('/images/logo.gif') no-repeat scroll 180px 225px;
+}
+a, a:link, a:visited, a:hover{
+  font-weight: normal;
+  color: #000;
+  font-family: Tahoma, sans-serif;
+  font-size: 14px;
+  padding: 5px 15px 5px 15px;
+  margin: 0 5px 5px 0;
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  background: #eee;
+  border: 1px solid #f9f9f9;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  text-decoration: none;
+}
+a:active {
+  background: #333;
+  color: #fff;
+  border-color: #e5e5e5;
+}
