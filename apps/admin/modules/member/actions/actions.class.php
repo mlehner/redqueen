@@ -10,13 +10,19 @@
  */
 class memberActions extends sfActions
 {
- /**
-  * Executes index action
-  *
-  * @param sfRequest $request A request object
-  */
-  public function executeIndex(sfWebRequest $request)
-  {
-    $this->forward('default', 'module');
-  }
+    /**
+     * Executes index action
+     *
+     * @param sfRequest $request A request object
+     */
+    public function executeIndex(sfWebRequest $request)
+    {
+        $this->forward('list');
+    }
+
+
+    public function executeList(sfWebRequest $request)
+    {
+        print_r(Person::getAll());
+    }
 }

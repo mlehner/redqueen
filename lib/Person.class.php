@@ -1,15 +1,207 @@
 <?php
 
-class Person {
-  public $dn;
-  public $name;
-  public $username;
+class Ldap_Person_Iterator extends Zend_Ldap_Collection
+{
+    protected function _createEntry(array $data)
+    {
+        $new_data = array();
 
-  public function __construct($dn, $name, $username) {
-    $this->dn = $dn;
-    $this->name = $name;
-    $this->username = $username;
-  }
+        foreach ($data as $key => $attr)
+        {
+            if (is_array($attr) && count($attr) <= 1)
+                $new_attr = $attr[0];
+            else
+                $new_attr = $attr;
+
+            $new_data[$key] = $new_attr;
+        }
+
+        return $new_data;
+    }
+}
+
+class Person {
+
+  /**
+   * Distinquished Name (for LDAP lookup)
+   */
+  public $dn;
+
+  /**
+   * Username for login
+   */
+  public $uid;
+  
+  /**
+   * Primary contact email
+   */
+  public $mail;
+  
+  /**
+   * Given Name (first name)
+   */
+  public $givenName;
+
+  /**
+   * Sur Name (last name)
+   */
+  public $sn;
+
+  /**
+   * Common Name (first and last)
+   */
+  public $cn;
+
+  /**
+   * Nickname
+   */
+  public $displayName;
+
+  /**
+   * UID, GID, Home directory and Login shell for *nix/bsd based systems
+   */
+  public $uidNumber;
+  public $gidNumber;
+  public $homeDirectory;
+  public $loginShell; 
+ 
+    /**
+     * Did the data pass validation?
+     */
+    protected $_valid;
+
+    protected $_dirtyFields;
+
+    public function __construct(array $data = null)
+    {
+        $this->_valid = true;
+        $this->_dirtyFields = array();
+
+        if ($data)
+            $this->hydrate($data);
+    }
+
+    protected function hydrate(array $data)
+    {
+        $fields = array('dn', 'uid', 'mail', 'givenName', 'sn', 'cn', 'displayName', 'uidNumber', 'gidNumber', 'homeDirectory', 'loginShell');
+
+        foreach ($fields as $field_name)
+        {
+            $data_key_name = strtolower($field_name);
+            if (array_key_exists($data_key_name, $data))
+            {
+                $this->$field_name = $data[ $data_key_name ];
+
+                // All the fields we care about right now should not contain multiple values
+                if (is_array($data[ $data_key_name ]))
+                {
+                    $this->_valid = false;
+                }
+            }
+            else
+            {
+                $this->$field_name = null;
+            }
+        }
+
+        $this->_fixName();
+    }
+
+    protected function _fixName()
+    {
+        if (($this->sn == null || $this->givenName == null) && $this->cn != null)
+        {
+            list($givenName, $surName) = explode(' ', $this->cn, 2);
+
+            if ($givenName != null)
+                $this->setGivenName($givenName);
+            else
+                $this->setGivenName($this->uid);
+
+            if ($surName != null)
+                $this->setSurName($surName);
+            else
+                $this->setSurName(' ');
+        }
+
+        if ($this->displayName == null)
+        {
+            $this->setNickname($this->uid);
+        }
+
+        // save it!
+        $this->save();
+    }
+
+    public function setGivenName($givenName)
+    {
+        $this->_setField('givenName', $givenName);
+        $this->_setField('cn', sprintf('%s %s', $givenName, $this->sn));
+    }
+
+    public function setSurName($surName)
+    {
+        $this->_setField('sn', $surName);
+        $this->_setField('cn', sprintf('%s %s', $this->givenName, $surName));
+    }
+
+    public function setNickname($nickname)
+    {
+        $this->_setField('displayName', $nickname);
+    }
+
+    protected function _setField($field, $value)
+    {
+        $this->$field = $value;
+
+        if (!in_array($field, $this->_dirtyFields))
+            $this->_dirtyFields[] = $field;
+    }
+
+    public function isValid()
+    {
+        return $this->_valid;
+    }
+
+    static function getAll()
+    {
+        $ldap = Lookup::ldap();
+
+        $people = array();
+        
+        $collection = $ldap->search('(objectClass=inetOrgPerson)', sfConfig::get('app_ldap_base_dn'), Zend_Ldap::SEARCH_SCOPE_SUB, array(), null, 'Ldap_Person_Iterator');
+
+        foreach($collection as $entry)
+        {
+            $people[] = new Person($entry);
+        }
+
+        return $people;
+    }
+
+    public function save()
+    {
+        if (!count($this->_dirtyFields)) return true;
+        
+        //try
+        //{
+            $entry = array();
+            foreach ($this->_dirtyFields as $field)
+            {
+                Zend_Ldap_Attribute::setAttribute($entry, $field, $this->$field);
+            }
+            //Zend_Ldap_Attribute::setPassword($entry, $password, Zend_Ldap_Attribute::PASSWORD_HASH_SHA);
+            
+            $ldap = Lookup::ldap();
+            $ldap->update($this->dn, $entry);
+            $this->_dirtyFields = array();
+
+            return true;
+        //} catch (Zend_Ldap_Exception $e) {
+        //}
+
+        return false;
+    }
 
   static function create($first_name, $last_name, $nickname, $email, $username, $password)
   {
@@ -117,7 +309,7 @@ class Person {
     $Twitter = Lookup::twitter();
     // @TODO: only update user once per half hour
     try {
-      $result = $Twitter->updateStatus($this->username . ' has entered the hackerspace.');
+      $result = $Twitter->updateStatus($this->uid . ' has entered the hackerspace.');
       return true;
     } catch (Arc90_Service_Twitter_Exception $e) {
     }
