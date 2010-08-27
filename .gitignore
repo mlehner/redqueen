@@ -1,2 +1,4 @@
 config/app.yml
 control/encrypt-key.php
+cache/**/
+log/*.log
