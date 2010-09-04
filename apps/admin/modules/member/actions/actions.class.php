@@ -17,12 +17,12 @@ class memberActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
-        $this->forward('list');
+        $this->forward('member', 'list');
     }
 
 
     public function executeList(sfWebRequest $request)
     {
-        print_r(Person::getAll());
+        $this->members = Person::getAll();
     }
 }

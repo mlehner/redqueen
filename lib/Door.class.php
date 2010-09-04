@@ -2,38 +2,199 @@
 
 class Door {
 
-  /**
-   * hard coded. referenced by identifier by remote system.
-   *
-   * bits are 2^x, ex: 2^0 = 1 = first bit in trigger
-   */
-  static $identifiers = array(
-    1 => 'MAIN',
-    2 => 'CONFERENCE_EXTERIOR',
-    3 => 'CONFERENCE_INTERIOR',
-    4 => 'QUIET',
-    5 => 'KITCHEN',
-    6 => 'WAREHOUSE_EXTERIOR'
-  );
-  
-  const DEFAULT_DOOR = 'MAIN';
+    /**
+     * Bit value for which door to trigger
+     */
+    const MAIN                  = 0x0;
+    const CONFERENCE_EXTERIOR   = 0x1;
+    const CONFERENCE_INTERIOR   = 0x2;
+    const QUIET                 = 0x4;
+    const WAREHOUSE_INTERIOR    = 0x8;
+    const WAREHOUSE_EXTERIOR    = 0x16;
 
-  static function open($door) {
-    $door_id = array_search($door, self::$identifiers);
-    if (!$door_id) {
-      return false;
+    static $identifiers = array(
+        self::MAIN                  => 'MAIN',
+        self::CONFERENCE_EXTERIOR   => 'CONFERENCE_EXTERIOR',
+        self::CONFERENCE_INTERIOR   => 'CONFERENCE_INTERIOR',
+        self::QUIET                 => 'QUIET',
+        self::WAREHOUSE_INTERIOR    => 'WAREHOUSE_INTERIOR',
+        self::WAREHOUSE_EXTERIOR    => 'WAREHOUSE_EXTERIOR'
+    );
+
+    static $ldap_dn = array(
+        self::MAIN              => 'cn=main,ou=door,dc=buffalolab,dc=org'
+    );
+
+    const DEFAULT_DOOR = self::MAIN;
+
+    public $uniqueMember;
+
+    public $cn;
+
+    public $dn;
+
+    public $description;
+
+    public function __construct(array $data = null)
+    {
+        $this->_valid = true;
+        $this->_dirtyFields = array();
+        $this->uniqueMember = array();
+
+        if ($data)
+            $this->hydrate($data);
     }
 
-    $bit = $door_id - 1;
+    protected function hydrate(array $data)
+    {
+        $fields = array('dn', 'cn', 'uniqueMember', 'description');
 
-    $script = realpath(dirname(__FILE__) . '/../control/trigger');
-    $address = '0x378';
-    $value = pow(2, $bit);
-    $duration = 5;
-    $pause = 2; // added 2 seconds to wait for twitter
+        foreach ($fields as $field_name)
+        {
+            $data_key_name = strtolower($field_name);
+            if (array_key_exists($data_key_name, $data))
+            {
+                $this->$field_name = $data[ $data_key_name ];
+            }
+            else
+            {
+                $this->$field_name = null;
+            }
+        }
+    }
 
-    @exec($script . ' ' . $address . ' ' . $value . ' ' . $duration . ' ' . $pause . ' > /dev/null &');
+    static function get($door)
+    {
+        if (array_key_exists($door, self::$ldap_dn))
+        {
+            $dn = self::$ldap_dn[ $door ];
+        }
+        else if (array_key_exists($door, self::$identifiers))
+        {
+            $dn = self::$ldap_dn[ self::$identifiers[ $door ] ];
+        }
 
-    return true;
-  }
+        $ldap = Lookup::ldap();
+
+        $door = $ldap->getEntry($dn);
+
+        if ($door == null)
+        {
+            return null;
+        }
+
+        return new Door(Ldap_CompressionIterator::compressEntry($door));
+    }
+
+    static function getAll($memberDn = null)
+    {
+        $ldap = Lookup::ldap();
+
+        $doors = array();
+        
+        $filter = Zend_Ldap_Filter::equals('objectClass', 'groupOfUniqueNames');
+        if ($memberDn != null)
+        {
+            $filter = $filter->addAnd(Zend_Ldap_Filter::equals('uniqueMember', $memberDn));
+        }
+        $collection = $ldap->search($filter, sfConfig::get('ldap_doors_dn'), Zend_Ldap::SEARCH_SCOPE_SUB, array(), null, 'Ldap_CompressionIterator');
+
+        foreach($collection as $entry)
+        {
+            $doors[] = new Door($entry);
+        }
+
+        return $doors;
+    }
+
+    static function getAllForTag($dn)
+    {
+        if ($dn instanceof Tag)
+        {
+            $dn = $dn->getDN();
+        }
+
+        return self::getAll($dn);
+    }
+
+    public function addTag($dn)
+    {
+        if ($dn instanceof Tag)
+        {
+            $dn = $dn->getDN();
+        }
+
+        $ldap = Lookup::ldap();
+
+        $node = $ldap->getNode($this->dn);
+        $node->appendToAttribute('uniqueMember', $dn);
+        $node->update();
+    }
+
+    public function deleteTag($dn)
+    {
+        if ($dn instanceof Tag)
+        {
+            $dn = $dn->getDN();
+        }
+
+        $ldap = Lookup::ldap();
+
+        $node = $ldap->getNode($this->dn);
+        $node->removeFromAttribute('uniqueMember', $dn);
+        $node->update();
+    }
+
+    public function canEnter($dn)
+    {
+        if ($dn instanceof Person)
+        {
+            $dn = $dn->getDN();
+        }
+
+        if (in_array($dn, $this->uniqueMember))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    static function open($door)
+    {
+        if (!in_array($door, $identifiers))
+        {
+            if (array_key_exists($door, $identifiers))
+            {
+                $value = $door;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            $value = $identifiers[ $door ];
+        }
+
+        $script = realpath(dirname(__FILE__) . '/../control/trigger');
+        $address = '0x378';
+        
+        #$value = pow(2, $bit);
+
+        $duration = 5;
+        $pause = 2; // added 2 seconds to wait for twitter
+
+        @exec($script . ' ' . $address . ' ' . $value . ' ' . $duration . ' ' . $pause . ' > /dev/null &');
+
+        return true;
+    }
+
+    public function __toString()
+    {
+        return $this->cn;
+    }
 }

@@ -1,29 +1,9 @@
 <?php
 
-class Ldap_Person_Iterator extends Zend_Ldap_Collection
-{
-    protected function _createEntry(array $data)
-    {
-        $new_data = array();
-
-        foreach ($data as $key => $attr)
-        {
-            if (is_array($attr) && count($attr) <= 1)
-                $new_attr = $attr[0];
-            else
-                $new_attr = $attr;
-
-            $new_data[$key] = $new_attr;
-        }
-
-        return $new_data;
-    }
-}
-
 class Person {
 
   /**
-   * Distinquished Name (for LDAP lookup)
+   * Distinquished Name of Person (for LDAP lookup)
    */
   public $dn;
 
@@ -133,6 +113,11 @@ class Person {
         $this->save();
     }
 
+    public function getDN()
+    {
+        return $this->dn;
+    }
+
     public function setGivenName($givenName)
     {
         $this->_setField('givenName', $givenName);
@@ -145,9 +130,24 @@ class Person {
         $this->_setField('cn', sprintf('%s %s', $this->givenName, $surName));
     }
 
+    public function getFullName()
+    {
+        return $this->cn;
+    }
+
     public function setNickname($nickname)
     {
         $this->_setField('displayName', $nickname);
+    }
+
+    public function getNickname()
+    {
+        return $this->displayName;
+    }
+
+    public function getUsername()
+    {
+        return $this->uid;
     }
 
     protected function _setField($field, $value)
@@ -169,7 +169,7 @@ class Person {
 
         $people = array();
         
-        $collection = $ldap->search('(objectClass=inetOrgPerson)', sfConfig::get('app_ldap_base_dn'), Zend_Ldap::SEARCH_SCOPE_SUB, array(), null, 'Ldap_Person_Iterator');
+        $collection = $ldap->search('(objectClass=inetOrgPerson)', sfConfig::get('app_ldap_members_dn'), Zend_Ldap::SEARCH_SCOPE_ONE, array(), null, 'Ldap_CompressionIterator');
 
         foreach($collection as $entry)
         {
@@ -177,6 +177,11 @@ class Person {
         }
 
         return $people;
+    }
+
+    function getTags()
+    {
+        return Tag::getAllForPerson($this);
     }
 
     public function save()
@@ -222,7 +227,7 @@ class Person {
 	Zend_Ldap_Attribute::setAttribute($entry, 'loginShell', '/bin/bash');
 
         $ldap = Lookup::ldap();
-        $ldap->add(sprintf('uid=%s,%s', $username, sfConfig::get('app_ldap_base_dn')), $entry);
+        $ldap->add(sprintf('uid=%s,%s', $username, sfConfig::get('app_ldap_members_dn')), $entry);
         return true;
     } catch (Zend_Ldap_Exception $e) {
     }
@@ -258,7 +263,7 @@ class Person {
         'username' => $this->dn,
         'password' => $old_password,
         'useStartTls' => sfConfig::get('app_ldap_use_tls'),
-        'baseDn' => sfConfig::get('app_ldap_base_dn')
+        'baseDn' => sfConfig::get('app_ldap_members_dn')
     );
 
     $ldap = new Zend_Ldap($options);

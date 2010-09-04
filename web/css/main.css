@@ -24,3 +24,7 @@ form ul li span.help {
     font-size: .9em;
     margin-left: 10px;
 }
+
+table {
+    border: 1px solid #000;
+}
