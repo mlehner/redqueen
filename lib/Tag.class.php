@@ -62,7 +62,7 @@ class Tag {
             }
         }
 
-        $this->_fixDoors();
+        #$this->_fixDoors();
     }
 
     public function getRFID()

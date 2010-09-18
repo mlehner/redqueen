@@ -75,7 +75,7 @@ class homeActions extends sfActions
 //* @DEBUG
         Door::open($this->getUser()->getDoor());
         $this->getUser()->setFlash('DOOR_OPEN', true);
-	$tag->person->welcome();
+	#$tag->person->welcome();
         $this->redirect('@open');
 //*/
         break;
