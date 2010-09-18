@@ -3,3 +3,4 @@ control/encrypt-key.php
 cache/project_autoload.cache
 cache/**/
 log/*.log
+control/trigger

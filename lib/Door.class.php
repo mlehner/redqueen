@@ -5,12 +5,12 @@ class Door {
     /**
      * Bit value for which door to trigger
      */
-    const MAIN                  = 0x0;
-    const CONFERENCE_EXTERIOR   = 0x1;
-    const CONFERENCE_INTERIOR   = 0x2;
-    const QUIET                 = 0x4;
-    const WAREHOUSE_INTERIOR    = 0x8;
-    const WAREHOUSE_EXTERIOR    = 0x16;
+    const MAIN                  = 1;
+    const CONFERENCE_EXTERIOR   = 2;
+    const CONFERENCE_INTERIOR   = 4;
+    const QUIET                 = 8;
+    const WAREHOUSE_INTERIOR    = 16;
+    const WAREHOUSE_EXTERIOR    = 32;
 
     static $identifiers = array(
         'MAIN' => self::MAIN,
@@ -164,31 +164,38 @@ class Door {
 
     static function open($door)
     {
-        if (!in_array($door, self::$identifiers))
+        if (array_key_exists($door, self::$identifiers))
         {
-            if (array_key_exists($door, self::$identifiers))
-            {
-                $value = self::$identifiers[ $door ];
-            }
-            else
-            {
-                return false;
-            }
+            $value = self::$identifiers[ $door ];
         }
-        else
+        else if (in_array($door, self::$identifiers))
         {
             $value = $door;
         }
+        else
+        {
+            return false;
+        }
 
         $script = realpath(dirname(__FILE__) . '/../control/trigger');
+        if (empty($script))
+        {
+             sfContext::getInstance()->getLogger()->crit('Failed to find trigger application');
+             return false;
+        }
+        
         $address = '0x378';
         
         #$value = pow(2, $bit);
 
         $duration = 5;
-        $pause = 2; // added 2 seconds to wait for twitter
+        $pause = 1; // added 2 seconds to wait for twitter
 
-        @exec($script . ' ' . $address . ' ' . $value . ' ' . $duration . ' ' . $pause . ' > /dev/null &');
+        $cmd = sprintf("%s %s %d %d %d >/dev/null &", $script, $address, $value, $duration, $pause);
+
+        sfContext::getInstance()->getLogger()->debug("door cmd: $cmd");
+        
+        @exec($cmd);
 
         return true;
     }

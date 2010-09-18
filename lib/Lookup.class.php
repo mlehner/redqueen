@@ -58,12 +58,9 @@ class Lookup {
   static function tag($rfid) {
     $ldap = self::ldap();
     try {
-      $result = $ldap->search('(uid=RFID:'.$rfid.')', sfconfig::get('app_ldap_base_dn'));
+      $result = $ldap->search('(uid=RFID:'.$rfid.')', sfconfig::get('app_ldap_members_dn'), Zend_Ldap::SEARCH_SCOPE_SUB, array(), null, 'Ldap_CompressionIterator');
       if ($result && $data = $result->getFirst()) {
-        $tag = $ldap->getNode($data['dn']);
-        $person = $tag->getParent($ldap);
-        $person = new Person($person->getAttribute('dn'), $person->getAttribute('cn', 0), $person->getAttribute('uid', 0));
-        return new Tag($tag->getAttribute('dn', 0), $person, preg_replace('#^RFID:#', '', $tag->getAttribute('uid', 0)), $tag->getAttribute('userPassword', 0));
+        return new Tag($data);
       }
     } catch (Zend_Ldap_Exception $e) {
       return false;
