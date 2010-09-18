@@ -39,10 +39,9 @@ class Lookup {
   static function person($username) {
     $ldap = self::ldap();
     try {
-      $result = $ldap->search('(uid='.$username.')', sfConfig::get('app_ldap_base_dn'));
+      $result = $ldap->search('(uid='.$username.')', sfConfig::get('app_ldap_members_dn'), Zend_Ldap::SEARCH_SCOPE_ONE, array(), null, 'Ldap_CompressionIterator');
       if ($result && $data = $result->getFirst()) {
-        $person = $ldap->getNode($data['dn']);
-        return new Person($person->getAttribute('dn'), $person->getAttribute('cn', 0), $person->getAttribute('uid', 0));
+        return new Person($data);
       }
     } catch (Zend_Ldap_Exception $e) {
       return false;

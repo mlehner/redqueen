@@ -43,7 +43,7 @@ class homeActions extends sfActions
    */
   public function executeDoor(sfWebRequest $request) {
     $this->doors = array();
-    foreach(Door::$identifiers as $door) {
+    foreach(Door::$identifiers as $door => $identifier) {
       $this->doors[$door] = $door;
     }
     return sfView::ERROR;

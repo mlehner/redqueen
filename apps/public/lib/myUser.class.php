@@ -16,10 +16,10 @@ class myUser extends sfBasicSecurityUser
   }
 
   public function getDoor() {
-    return $this->getAttribute('DESIRED_DOOR', Door::$identifiers[ Door::DEFAULT_DOOR ]);
+    return $this->getAttribute('DESIRED_DOOR', 'MAIN');
   }
   public function setDoor($door) {
-    if ($door && in_array($door, Door::$identifiers)) {
+    if ($door && array_key_exists($door, Door::$identifiers)) {
       $this->setAttribute('DESIRED_DOOR', $door);
     }
   }

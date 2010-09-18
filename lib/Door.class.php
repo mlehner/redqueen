@@ -13,12 +13,12 @@ class Door {
     const WAREHOUSE_EXTERIOR    = 0x16;
 
     static $identifiers = array(
-        self::MAIN                  => 'MAIN',
-        self::CONFERENCE_EXTERIOR   => 'CONFERENCE_EXTERIOR',
-        self::CONFERENCE_INTERIOR   => 'CONFERENCE_INTERIOR',
-        self::QUIET                 => 'QUIET',
-        self::WAREHOUSE_INTERIOR    => 'WAREHOUSE_INTERIOR',
-        self::WAREHOUSE_EXTERIOR    => 'WAREHOUSE_EXTERIOR'
+        'MAIN' => self::MAIN,
+        'CONFERENCE_EXTERIOR' => self::CONFERENCE_EXTERIOR,
+        'CONFERENCE_INTERIOR' => self::CONFERENCE_INTERIOR,
+        'QUIET' => self::QUIET,
+        'WAREHOUSE_INTERIOR' => self::WAREHOUSE_INTERIOR,
+        'WAREHOUSE_EXTERIOR' => self::WAREHOUSE_EXTERIOR
     );
 
     static $ldap_dn = array(
@@ -164,11 +164,11 @@ class Door {
 
     static function open($door)
     {
-        if (!in_array($door, $identifiers))
+        if (!in_array($door, self::$identifiers))
         {
-            if (array_key_exists($door, $identifiers))
+            if (array_key_exists($door, self::$identifiers))
             {
-                $value = $door;
+                $value = self::$identifiers[ $door ];
             }
             else
             {
@@ -177,7 +177,7 @@ class Door {
         }
         else
         {
-            $value = $identifiers[ $door ];
+            $value = $door;
         }
 
         $script = realpath(dirname(__FILE__) . '/../control/trigger');
