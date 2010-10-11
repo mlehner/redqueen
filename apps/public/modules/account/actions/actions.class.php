@@ -68,7 +68,7 @@ class accountActions extends sfActions
             {
                 $login = $form->getValue('login');
 
-                if (in_array($login['username'], array('jerel', 'mlehner', 'm')))
+                if (in_array($login['username'], array('poolecl', 'mlehner', 'm')))
                 {
                     if ($person = $this->_validateLogin($login['username'], $login['password']))
                     {
