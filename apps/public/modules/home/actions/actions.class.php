@@ -69,8 +69,7 @@ class homeActions extends sfActions
       default:
         if (!($tag = Tag::get($this->rfid))) {
           return sfView::ERROR;
-        }
-
+	}
 
 //* @DEBUG
         Door::open($this->getUser()->getDoor());
@@ -201,6 +200,8 @@ class homeActions extends sfActions
     if (!$this->getUser()->getFlash('DOOR_OPEN')) {
       $this->redirect('@homepage');
     }
+
+    $this->username = $this->getUser()->getUsername();
 
     $this->getUser()->setFlash('DOOR_OPEN', false);
     $this->getUser()->unsetUsername();
