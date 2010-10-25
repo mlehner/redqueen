@@ -3,9 +3,14 @@
 class Lookup {
   static function twitter() {
     static $twitter;
-    if (!$twitter) {
-      require_once(sfConfig::get('sf_root_dir').'/vendor/Arc90/Service/Twitter.php');
-      $twitter = new Arc90_Service_Twitter(sfConfig::get('app_twitter_username'), sfConfig::get('app_twitter_password'));
+    if (!($twitter instanceof Zend_Service_Twitter)) {
+        $config = Doctrine::getTable('Config')->find('twitter_access_token');
+
+        $twitter = new Zend_Service_Twitter(array(
+            'accessToken' => unserialize($config->getConfigValue()),
+            'consumerKey' => sfConfig::get('app_twitter_consumer_key'),
+            'consumerSecret' => sfConfig::get('app_twitter_consumer_secret')
+        ));
     }
     return $twitter;
   }

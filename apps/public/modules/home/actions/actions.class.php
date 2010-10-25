@@ -68,7 +68,7 @@ class homeActions extends sfActions
       case myUser::ACTION_OPEN:
       default:
         if (!($tag = Tag::get($this->rfid))) {
-          sfLogger::getInstance()->alert(sprintf('Invalid RFID! (rfid = %s)', $this->rfid));
+          sfContext::getInstance()->getLogger()->alert(sprintf('Invalid RFID! (rfid = %s)', $this->rfid));
           return sfView::ERROR;
 	}
 
@@ -136,9 +136,8 @@ class homeActions extends sfActions
         $this->getUser()->setFlash('DOOR_OPEN', true);
 
         $person = $tag->getPerson();
-
         $person->welcome();
-        $this->getUser()->setUsername($peron->getNickname());
+        $this->getUser()->setUsername($person->getNickname());
 
         $this->redirect('@open');
         break;
@@ -174,8 +173,10 @@ class homeActions extends sfActions
       default:
         Door::open($this->getUser()->getDoor());
         $this->getUser()->setFlash('DOOR_OPEN', true);
+
 	$person->welcome();
         $this->getUser()->setUsername($person->getNickname());
+        
         $this->redirect('@open');
         break;
     }

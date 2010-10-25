@@ -13,7 +13,7 @@ class ProjectConfiguration extends sfProjectConfiguration
     spl_autoload_register(array('Zend_Loader_Autoloader', 'autoload'));
 
     // for compatibility / remove and enable only the plugins you want
-    $this->enableAllPluginsExcept(array('sfDoctrinePlugin'));
+    $this->enableAllPluginsExcept(array('sfPropelPlugin'));
     
     sfWidgetFormSchema::setDefaultFormFormatterName('betterList'); 
   }

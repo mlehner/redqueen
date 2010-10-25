@@ -311,13 +311,8 @@ class Person {
   }
 
   public function welcome() {
-    $Twitter = Lookup::twitter();
+    $twitter = Lookup::twitter();
     // @TODO: only update user once per half hour
-    try {
-      $result = $Twitter->updateStatus($this->uid . ' has entered the hackerspace.');
-      return true;
-    } catch (Arc90_Service_Twitter_Exception $e) {
-    }
-    return false;
+    $twitter->statusUpdate($this->getNickname() . ' has entered the hackerspace.');
   }
 }
