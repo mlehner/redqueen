@@ -54,8 +54,9 @@ if ($serial->deviceSet("/dev/ttyUSB0")) {
       if (strlen($tag)) {
         //var_dump($tag);
         $serial->deviceClose();
-        exec('mpg321 -q ' . dirname(__FILE__).'/beep.mp3 > /dev/null &');
-        if (preg_match('#^([0-9A-Z]{10})#', $tag, $matches)) {
+        //exec('mpg321 -q ' . dirname(__FILE__).'/beep.mp3 > /dev/null &');
+        exec('/usr/bin/beep &');
+	if (preg_match('#^([0-9A-Z]{10})#', $tag, $matches)) {
           $rfid = $matches[1];
           //echo $rfid . "\n";
           exec('midori -c ' . dirname(__FILE__).'/midori https://10.27.0.1/?rfid=' . bin2hex(mcrypt_generic($handle, $rfid)) . ' > /dev/null &');

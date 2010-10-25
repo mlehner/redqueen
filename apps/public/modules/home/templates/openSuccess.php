@@ -1,4 +1,4 @@
-<h1>Welcome, <?php echo $username; ?></h1>
+<h1>Welcome <?php echo $username; ?>!</h1>
 
 <p>The door is now open and will remain open for 5 seconds. Enter now.</p>
 

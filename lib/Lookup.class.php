@@ -36,18 +36,32 @@ class Lookup {
    * @param $username
    * @return Person
    */
-  static function person($username) {
-    $ldap = self::ldap();
-    try {
-      $result = $ldap->search('(uid='.$username.')', sfConfig::get('app_ldap_members_dn'), Zend_Ldap::SEARCH_SCOPE_ONE, array(), null, 'Ldap_CompressionIterator');
-      if ($result && $data = $result->getFirst()) {
-        return new Person($data);
-      }
-    } catch (Zend_Ldap_Exception $e) {
-      return false;
+    static function person($username)
+    {
+        $ldap = self::ldap();
+        
+        try {
+            if ($username instanceof Zend_Ldap_Dn)
+            {
+                $ldap_node = Zend_Ldap_Node::fromLdap($username, $ldap);
+                $data = Ldap_CompressionIterator::compressEntry($ldap_node->getData());
+            }
+            else
+            {
+                $result = $ldap->search('(uid='.$username.')', sfConfig::get('app_ldap_members_dn'), Zend_Ldap::SEARCH_SCOPE_ONE, array(), null, 'Ldap_CompressionIterator');
+                if (!$result)
+                    return false;
+
+                $data = $result->getFirst();
+            }
+
+            return new Person($data);
+
+        } catch (Zend_Ldap_Exception $e) {
+        }
+        
+        return false;
     }
-    return false;
-  }
 
   /**
    * simpleSecurityObject, child of inetOrgPerson

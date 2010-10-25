@@ -46,7 +46,13 @@ class Tag {
         foreach ($fields as $field_name)
         {
             $data_key_name = strtolower($field_name);
-            if (array_key_exists($data_key_name, $data))
+            $method = 'hydrate' . sfInflector::camelize($field_name);
+            
+            if (method_exists($this, $method))
+            {
+                $this->$method($data[ $data_key_name ]);
+            }
+            else if (array_key_exists($data_key_name, $data))
             {
                 $this->$field_name = $data[ $data_key_name ];
 
@@ -63,6 +69,11 @@ class Tag {
         }
 
         #$this->_fixDoors();
+    }
+
+    protected function hydrateDn($dn)
+    {
+        $this->dn = Zend_Ldap_Dn::fromString($dn);
     }
 
     public function getRFID()
@@ -109,6 +120,13 @@ class Tag {
     public function getDoors()
     {
         return Door::getAllForTag($this);
+    }
+
+    public function getPerson()
+    {
+        $parent = $this->dn->getParentDn();
+
+        return Lookup::person($parent); 
     }
 
     public function checkPin($pin) {
