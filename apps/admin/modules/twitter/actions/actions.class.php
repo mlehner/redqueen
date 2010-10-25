@@ -17,12 +17,20 @@ class twitterActions extends sfActions
      */
     public function executeIndex(sfWebRequest $request)
     {
-        if ($this->getUser()->hasAttribute('twitter_access_token'))
+        $config = Doctrine::getTable('Config')->find('twitter_access_token');
+        if ($config)
         {
-            $this->twitter = new Zend_Service_Twitter(array(
-                'username' => sfConfig::get('app_twitter_username'),
-                'accessToken' => $this->getUser()->getAttribute('twitter_access_token')
+            $twitter = new Zend_Service_Twitter(array(
+                'accessToken' => unserialize($config->getConfigValue()),
+                'consumerKey' => sfConfig::get('app_twitter_consumer_key'),
+                'consumerSecret' => sfConfig::get('app_twitter_consumer_secret')
             ));
+
+            $response = $twitter->account->verifyCredentials();
+            if (isset($response->getBody()->error))
+                $this->validated = false;
+            else
+                $this->validated = true;
         }
     }
 
@@ -48,7 +56,13 @@ class twitterActions extends sfActions
 
         $access_token = $consumer->getAccessToken($request->getGetParameters(), $req_token);
 
-        $this->getUser()->setAttribute('twitter_access_token', $access_token);
+        $config = Doctrine::getTable('Config')->find('twitter_access_token');
+        if (!$config)
+            $config = new Config();
+
+        $config->setConfigKey('twitter_access_token');
+        $config->setConfigValue(serialize($access_token));
+        $config->save();
 
         $this->redirect('twitter/index');
     }

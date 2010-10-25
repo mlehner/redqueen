@@ -1,5 +1,5 @@
-<?php if (isset($twitter)): ?>
-<?php if ($twitter->account->verifyCredentials()): ?>
+<?php if (isset($validated)): ?>
+<?php if ($validated === true): ?>
 <p>Validated credentials! Ready to update your status...</p>
 <?php else: ?>
 <p>Credentials could not be validated! Something is wrong :(</p>

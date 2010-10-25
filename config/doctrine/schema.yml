@@ -1,0 +1,18 @@
+Config:
+    options:
+        symfony:
+            filter: false
+            form: false
+    columns:
+        config_key: { type: string(255), primary: true }
+        config_value: clob
+
+AuthLog:
+    options:
+        symfony:
+            form: false
+    columns:
+        username: { type: string(255), notnull: true }
+        rfid: { type: string(20) }
+        success: { type: boolean }
+        attempt_timestamp: { type: timestamp }
