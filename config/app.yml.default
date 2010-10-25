@@ -5,7 +5,8 @@ all:
     ldap_admin_dn: #
     ldap_admin_password: #
 
-    twitter_username: #
-    twitter_password: #
-
     encrypt_key: #
+
+    twitter:
+	consumer_key: #
+	consumer_secret: #
