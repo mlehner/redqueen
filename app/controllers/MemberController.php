@@ -22,4 +22,19 @@ class MemberController extends ControllerBase
             } 
         }
     }
+
+    public function editAction($member_id)
+    {
+        $member = Member::findFirstByIdentifier($member_id);
+
+        $form = $this->view->form = new MemberForm($member, array());
+
+        if ($this->request->isPost()) {
+            $form->bind($_POST, $member);
+
+            if ($form->isValid()) {
+                $member->save();
+            }
+        }
+    }
 }
