@@ -2,7 +2,6 @@
 
 class Card extends \Phalcon\Mvc\Model
 {
-
     /*
      * 
      * @Primary

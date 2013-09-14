@@ -16,6 +16,8 @@ class MemberController extends ControllerBase
             $form->bind($_POST, $member);
 
             if ($form->isValid()) {
+                $member->password = $this->security->hash($member->password);
+                
                 $member->save();
                 
                 

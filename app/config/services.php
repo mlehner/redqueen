@@ -80,6 +80,18 @@ $di->set('modelsMetadata', function() {
 });
 
 /**
+ * Re-register Security for more control over workfactor
+ */
+$di->set('security', function() { 
+    $security = new Phalcon\Security();
+
+    $security->setWorkFactor(15);
+
+    return $security;
+
+});
+
+/**
  * Start the session the first time some component request the session service
  */
 $di->set('session', function() {
