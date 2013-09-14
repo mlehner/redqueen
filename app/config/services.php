@@ -6,6 +6,7 @@ use Phalcon\DI\FactoryDefault,
 	Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter,
 	Phalcon\Mvc\View\Engine\Volt as VoltEngine,
 	Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter,
+    Phalcon\Mvc\Router\Annotations as RouterAnnotations,
 	Phalcon\Session\Adapter\Files as SessionAdapter;
 
 /**
@@ -20,6 +21,19 @@ $di->set('url', function() use ($config) {
 	$url = new UrlResolver();
 	$url->setBaseUri($config->application->baseUri);
 	return $url;
+}, true);
+
+/**
+ * Register out routes and configure them
+ */
+
+$di->set('router', function() { 
+    $router = new RouterAnnotations(false);
+    $router->removeExtraSlashes(true);
+
+    $router->addResource('Member', '/members');
+
+    return $router;
 }, true);
 
 /**
@@ -79,7 +93,7 @@ $di->set('modelsMetadata', function() {
     return $metaData;
 });
 
-/**
+/**`j
  * Re-register Security for more control over workfactor
  */
 $di->set('security', function() { 
