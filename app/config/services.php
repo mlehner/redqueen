@@ -24,19 +24,6 @@ $di->set('url', function() use ($config) {
 }, true);
 
 /**
- * Register out routes and configure them
- */
-
-$di->set('router', function() { 
-    $router = new RouterAnnotations(false);
-    $router->removeExtraSlashes(true);
-
-    $router->addResource('Member', '/members');
-
-    return $router;
-}, true);
-
-/**
  * Setting up the view component
  */
 $di->set('view', function() use ($config) {
@@ -93,7 +80,7 @@ $di->set('modelsMetadata', function() {
     return $metaData;
 });
 
-/**`j
+/**
  * Re-register Security for more control over workfactor
  */
 $di->set('security', function() { 

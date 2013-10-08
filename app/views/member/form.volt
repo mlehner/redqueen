@@ -25,6 +25,14 @@
                         {{ form.render('email') }}
                     </div>
                 </div>
+
+				<div class="control-group{{ form.hasMessagesFor('gender') ? ' error' : '' }}">
+                    <label class="control-label" for="member-name">Gender</label>
+                    <div class="controls">
+                        {{ form.render('gender') }}
+                    </div>
+                </div>
+
                 <div class="control-group{{ form.hasMessagesFor('password') ? ' error' : '' }}">
                     <label class="control-label" for="member-name">Password</label>
                     <div class="controls">
