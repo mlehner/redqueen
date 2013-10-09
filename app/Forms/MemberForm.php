@@ -11,15 +11,18 @@ class MemberForm extends \Phalcon\Forms\Form
     public function initialize(Member $member, $options)
     {
         $this->add(new Text('name'));
-        $this->add(new Text('username'));
+		$username = new Text('username');
+		$username->addValidator(new DuplicateMemberUsernameValidator());
+        $this->add($username);
 
         $email = new Text('email');
         $email->addValidator(new Email());
+		$email->addValidator(new DuplicateMemberEmailValidator());
         $this->add($email);
 
 		$gender = new Select('gender', array(
-			'm' => 'Male',
-			'f' => 'Female'
+			Member::GENDER_MALE => 'Male',
+			Member::GENDER_FEMALE => 'Female'
 		));
 
 		$this->add($gender);

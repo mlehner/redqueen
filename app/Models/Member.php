@@ -66,4 +66,27 @@ class Member extends \Phalcon\Mvc\Model
 		$this->username = $username;
 		return $this;
 	}
+
+	public function getEmail() { 
+		return $this->email;
+	}
+
+	public function setEmail($email){ 
+		$this->email = $email;
+		return $this;
+	}
+
+	public function setPassword($password) { 
+		$this->password = $password;
+		return $this;
+	}
+
+	public function getGender() {
+
+	}
+
+	public function setGender($gender) { 
+		$this->gender = $gender; 
+		return $this;
+	}
 }

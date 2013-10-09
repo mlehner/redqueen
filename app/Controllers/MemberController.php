@@ -17,10 +17,7 @@ class MemberController extends ControllerBase
 
             if ($form->isValid()) {
                 $member->password = $this->security->hash($member->password);
-                
                 $member->save();
-                
-                
             } 
         }
     }
