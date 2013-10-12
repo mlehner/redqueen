@@ -17,7 +17,7 @@
             <tbody>
             {% for member in members %}
                 <tr>
-                    <td>{{ link_to('member/' ~ member.id ~ '/edit', member.name) }}</td>
+                    <td>{{ link_to('member/edit/' ~ member.id, member.name) }}</td>
                     <td>{{ member.username }}</td>
                     <td>{{ member.email }}</td>
                     <td></td>

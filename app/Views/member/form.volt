@@ -33,6 +33,10 @@
                     </div>
                 </div>
 
+
+				<div class="control-group">
+					<span class="muted" style="padding-left: 50px">Warning Changing this field will reset the users password</span>
+				</div>
                 <div class="control-group{{ form.hasMessagesFor('password') ? ' error' : '' }}">
                     <label class="control-label" for="member-name">Password</label>
                     <div class="controls">

@@ -8,16 +8,14 @@ use \Phalcon\Validation\Validator\Confirmation;
 
 class MemberForm extends \Phalcon\Forms\Form
 {
-    public function initialize(Member $member, $options)
+    public function initialize(Member $member, $options, $edit = false)
     {
         $this->add(new Text('name'));
 		$username = new Text('username');
-		$username->addValidator(new DuplicateMemberUsernameValidator());
         $this->add($username);
 
         $email = new Text('email');
         $email->addValidator(new Email());
-		$email->addValidator(new DuplicateMemberEmailValidator());
         $this->add($email);
 
 		$gender = new Select('gender', array(

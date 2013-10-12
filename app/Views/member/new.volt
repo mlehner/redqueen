@@ -7,6 +7,6 @@
 {% block form_actions %}
 <div class="form-actions">
     <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn">Cancel</button>
+    {{ link_to('member', 'Cancel', 'class':'btn') }} 
 </div>
 {% endblock %}
