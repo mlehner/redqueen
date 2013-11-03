@@ -11,6 +11,8 @@ class MemberController extends ControllerBase
     public function newAction()
     {
         $member = new Member();
+
+		var_dump($member->getCreatedAt());die;
         $form = $this->view->form = new NewMemberForm($member, array());
 
         if ($this->request->isPost()) {
@@ -47,4 +49,16 @@ class MemberController extends ControllerBase
             }
         }
     }
+
+	public function cardsAction($sub_route, $member_id)
+	{
+
+		if ($sub_route == 'new') { 
+			var_Dump($member_id);
+			$member = Member::findFirstById($member_id);
+
+			var_Dump($member);
+			die('hi');
+		}
+	}
 }

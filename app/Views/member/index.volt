@@ -23,7 +23,7 @@
                     <td>{{ member.username }}</td>
                     <td>{{ member.email }}</td>
                     <td></td>
-                    <td>{{ link_to('member/' ~ member.id ~ '/card/new', 'Add Card', 'class': 'btn') }}</td>
+                    <td>{{ link_to('member/cards/new/' ~ member.id, 'Add Card', 'class': 'btn') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
