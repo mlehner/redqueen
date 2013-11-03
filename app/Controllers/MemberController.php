@@ -47,6 +47,4 @@ class MemberController extends ControllerBase
             }
         }
     }
-
-	public function 
 }
