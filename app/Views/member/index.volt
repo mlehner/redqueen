@@ -4,6 +4,8 @@
 
         {{ link_to('member/new/', 'Add Member', 'class': 'btn') }}
 
+		<?php $this->flashSession->output() ?>
+
         <table class="table">
             <thead>
                 <tr>
