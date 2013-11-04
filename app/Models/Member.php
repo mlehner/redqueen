@@ -1,5 +1,7 @@
 <?php
 
+use Phalcon\Mvc\Model\Behavior\Timestampable;
+
 class Member extends \Phalcon\Mvc\Model 
 {
 	const GENDER_MALE = 1, 
@@ -42,12 +44,12 @@ class Member extends \Phalcon\Mvc\Model
 	protected $cards;
 
 	/*
-	 * @Column(type="date")
+	 * @Column(type="string")
 	 */
 	protected $created_at;
 
 	/*
-	 * @Column(type="date")
+	 * @Column(type="string")
 	 */
 	protected $updated_at;
 
@@ -56,11 +58,35 @@ class Member extends \Phalcon\Mvc\Model
 		return "members";
 	}
 
+	private function dateFormat($date){
+		if ($date instanceof \DateTime){ 
+			return $date->format('Y-m-d H:i:s P');
+		} else { 
+			return new \Datetime($date);
+		}
+	}
+
 	public function initialize() { 
-		$this->setCreatedAt(new \DateTime('now'))
-			->setUpdatedAt(new \DateTime('now'));
+		
+			
+		$this->setUpdatedAt(new \DateTime('now'));
+		/*
+		$this->addBehavior(new Timestampable(
+			array(
+				'beforeCreate' => array(
+					'field' => 'created_at',
+					'format' => $dateFormat()
+				),
+				'beforeCreate' => array(
+					'field' => 'updated_at',
+					'format' => $dateFormat()
+				), 
+			)
+		));
+		*/
 
 		$this->hasMany("id", "cards", "member_id");
+
 	}
 
 	public function getId(){
@@ -94,6 +120,10 @@ class Member extends \Phalcon\Mvc\Model
 		return $this;
 	}
 
+	public function getPassword(){ 
+		return $this->password;
+	}
+
 	public function setPassword($password) { 
 		$this->password = $password;
 		return $this;
@@ -109,20 +139,21 @@ class Member extends \Phalcon\Mvc\Model
 	}
 
 	public function getCreatedAt(){ 
-		return $this->created_at;
+		return $this->dateFormat($this->created_at);
 	}
 
-	public function setCreatedAt(\DateTime $date){
-		$this->created_at = $date;	
+	public function setCreatedAt($date){
+		$this->created_at = $this->dateFormat($date);	
+
 		return $this;
 	}
 
 	public function getUpdatedAt(){ 
-		return $this->updated_at;
+		return $this->dateFormat($this->updated_at);
 	}
 
-	public function setUpdatedAt(\DateTime $date){
-		$this->updated_at = $date;	
+	public function setUpdatedAt($date){
+		$this->updated_at = $this->dateFormat($date);	
 		return $this;
 	}
 

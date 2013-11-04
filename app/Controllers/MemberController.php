@@ -12,15 +12,19 @@ class MemberController extends ControllerBase
     {
         $member = new Member();
 
-		var_dump($member->getCreatedAt());die;
         $form = $this->view->form = new NewMemberForm($member, array());
 
         if ($this->request->isPost()) {
             $form->bind($_POST, $member);
-
+			
             if ($form->isValid()) {
-                $member->password = $this->security->hash($member->password);
+                $member->setPassword($this->security->hash($member->getPassword()))
+				->setCreatedAt(new \DateTime('now'));
+
+
                 $member->save();
+
+				var_dump($member);die;
 
 				$response = new Response();
 
