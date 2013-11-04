@@ -19,11 +19,11 @@
             <tbody>
             {% for member in members %}
                 <tr>
-                    <td>{{ link_to('member/edit/' ~ member.id, member.name) }}</td>
-                    <td>{{ member.username }}</td>
-                    <td>{{ member.email }}</td>
+                    <td>{{ link_to('member/edit/' ~ member.getId(), member.getName()) }}</td>
+                    <td>{{ member.getUsername() }}</td>
+                    <td>{{ member.getEmail() }}</td>
                     <td></td>
-                    <td>{{ link_to('member/cards/new/' ~ member.id, 'Add Card', 'class': 'btn') }}</td>
+                    <td>{{ link_to('member/cardsnew/' ~ member.getId(), 'Add Card', 'class': 'btn') }}</td>
                 </tr>
             {% endfor %}
             </tbody>

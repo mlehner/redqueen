@@ -21,10 +21,7 @@ class MemberController extends ControllerBase
                 $member->setPassword($this->security->hash($member->getPassword()))
 				->setCreatedAt(new \DateTime('now'));
 
-
                 $member->save();
-
-				var_dump($member);die;
 
 				$response = new Response();
 
@@ -39,6 +36,8 @@ class MemberController extends ControllerBase
     public function editAction($member_id)
     {
         $member = Member::findFirstById($member_id);
+
+		var_dump($member->getCards());die;
 		$member->setPassword('');
         $form = $this->view->form = new MemberForm($member, array());
 
@@ -46,6 +45,7 @@ class MemberController extends ControllerBase
             $form->bind($_POST, $member);
 
             if ($form->isValid()) {
+				$member->setUpdatedAt(new \DateTime('now'));
                 $member->update();
 
 				$response = new Response();
@@ -54,15 +54,22 @@ class MemberController extends ControllerBase
         }
     }
 
-	public function cardsAction($sub_route, $member_id)
+	public function cardsNewAction( $member_id)
 	{
 
-		if ($sub_route == 'new') { 
-			var_Dump($member_id);
 			$member = Member::findFirstById($member_id);
 
-			var_Dump($member);
-			die('hi');
-		}
+			$card = new Card();
+
+			$form = $this->view->form = new CardForm($card, array());
+
+			if ($this->request->isPost()){
+				
+				$form->bind($_POST, $card);
+				if ($form->isValid()){
+					$card->setMemberId($member_id);
+					var_dump($card);die;
+				}
+			}
 	}
 }

@@ -58,6 +58,9 @@ class Member extends \Phalcon\Mvc\Model
 		return "members";
 	}
 
+	/*
+	 * @TODO I should be replaced 
+	 */
 	private function dateFormat($date){
 		if ($date instanceof \DateTime){ 
 			return $date->format('Y-m-d H:i:s P');
@@ -70,7 +73,10 @@ class Member extends \Phalcon\Mvc\Model
 		
 			
 		$this->setUpdatedAt(new \DateTime('now'));
+
 		/*
+		 * It would be nice to use these
+		 *
 		$this->addBehavior(new Timestampable(
 			array(
 				'beforeCreate' => array(
