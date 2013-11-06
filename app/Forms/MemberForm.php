@@ -5,17 +5,29 @@ use \Phalcon\Forms\Element\Password;
 use \Phalcon\Forms\Element\Select;
 use \Phalcon\Validation\Validator\Email;
 use \Phalcon\Validation\Validator\Confirmation;
+use \Phalcon\Validation\Validator\PresenceOf;
 
 class MemberForm extends \Phalcon\Forms\Form
 {
     public function initialize(Member $member, $options, $edit = false)
     {
-        $this->add(new Text('name'));
+		$name = new Text('name');
+		$name->addValidator(new PresenceOf(array(
+			'message' => 'Full name is required'
+		)));
+        $this->add($name);
+
 		$username = new Text('username');
+		$username->addValidator(new PresenceOf(array(
+			'message' => 'Username is required'
+		)));
         $this->add($username);
 
         $email = new Text('email');
         $email->addValidator(new Email());
+		$email->addValidator(new PresenceOf(array(
+			'message' => 'Email is required'
+		)));
         $this->add($email);
 
 		$gender = new Select('gender', array(
@@ -30,7 +42,16 @@ class MemberForm extends \Phalcon\Forms\Form
             'message' => 'Password doesn\'t match confirmation',
             'with' => 'password_confirm'
         )));
+		$password->addValidator(new PresenceOf(array(
+			'message' => 'Password is required'
+		)));
         $this->add($password);
-        $this->add(new Password('password_confirm'));
+
+		$passwordConfirm = new Password('password_confirm');
+		$passwordConfirm->addValidator(new PresenceOf(array(
+			'message' => 'Password is required'
+		)));
+        $this->add($password);
+        $this->add($passwordConfirm);
     }
 }

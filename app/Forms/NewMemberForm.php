@@ -7,9 +7,9 @@ class NewMemberForm extends MemberForm {
 		parent::initialize($member, $options, $edit);
 
 		$value = $this->get('username');
-		$value->addValidator( new DuplicateDatabaseEntryValidator('username'));
+		$value->addValidator( new DuplicateDatabaseMemberValidator('username'));
 
 		$value = $this->get('email');
-		$value->addValidator(new DuplicateDatabaseEntryValidator('email'));
+		$value->addValidator(new DuplicateDatabaseMemberValidator('email'));
 	}
 }

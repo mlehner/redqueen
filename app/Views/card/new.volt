@@ -2,8 +2,7 @@
 	<div class="span12">
 		<form class="form-horizontal" method="post">
             <fieldset>
-                <legend>Member</legend>
-
+                <legend>Add a New Card</legend>
                 <div class="control-group{{ form.hasMessagesFor('pin') ? ' error' : '' }}">
                     <label class="control-label" for="card-pin">Pin</label>
                     <div class="controls">
@@ -18,6 +17,7 @@
                     </div>
                 </div>
             </fielset>
+			<button type="submit">Add a Card</button>
 		</form>
 	</div>
 	

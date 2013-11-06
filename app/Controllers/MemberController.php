@@ -37,7 +37,6 @@ class MemberController extends ControllerBase
     {
         $member = Member::findFirstById($member_id);
 
-		var_dump($member->getCards());die;
 		$member->setPassword('');
         $form = $this->view->form = new MemberForm($member, array());
 
@@ -54,22 +53,5 @@ class MemberController extends ControllerBase
         }
     }
 
-	public function cardsNewAction( $member_id)
-	{
-
-			$member = Member::findFirstById($member_id);
-
-			$card = new Card();
-
-			$form = $this->view->form = new CardForm($card, array());
-
-			if ($this->request->isPost()){
-				
-				$form->bind($_POST, $card);
-				if ($form->isValid()){
-					$card->setMemberId($member_id);
-					var_dump($card);die;
-				}
-			}
-	}
 }
+

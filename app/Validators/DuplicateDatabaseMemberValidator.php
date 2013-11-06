@@ -5,7 +5,7 @@ use Phalcon\Validation\Validator,
 	Phalcon\Validation\Message;
 
 
-class DuplicateDatabaseEntryValidator extends Validator implements ValidatorInterface { 
+class DuplicateDatabaseMemberValidator extends Validator implements ValidatorInterface { 
 	
 	private $field;
 

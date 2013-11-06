@@ -18,12 +18,14 @@
             </thead>
             <tbody>
             {% for member in members %}
+
+			{{ dump(member) }}
                 <tr>
                     <td>{{ link_to('member/edit/' ~ member.getId(), member.getName()) }}</td>
                     <td>{{ member.getUsername() }}</td>
                     <td>{{ member.getEmail() }}</td>
-                    <td></td>
-                    <td>{{ link_to('member/cardsnew/' ~ member.getId(), 'Add Card', 'class': 'btn') }}</td>
+                    <td>{{ member.getCards() }}</td>
+                    <td>{{ link_to('member/' ~ member.getId() ~ '/card/new', 'Add Card', 'class': 'btn') }}</td>
                 </tr>
             {% endfor %}
             </tbody>

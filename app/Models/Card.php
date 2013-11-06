@@ -25,7 +25,7 @@ class Card extends \Phalcon\Mvc\Model
     protected $pin;
 
 	/*
-	 * @Column(type="date")
+	 * @Column(type="string")
 	 */
 	protected $created_at;
 
@@ -39,6 +39,18 @@ class Card extends \Phalcon\Mvc\Model
 
 		
 	}
+
+	/*
+	 * @TODO I should be replaced 
+	 */
+	private function dateFormat($date){
+		if ($date instanceof \DateTime){ 
+			return $date->format('Y-m-d H:i:s P');
+		} else { 
+			return new \Datetime($date);
+		}
+	}
+
 
 	public function getId() { 
 		return $this->id;
@@ -71,12 +83,13 @@ class Card extends \Phalcon\Mvc\Model
 		return $this;
 	}
 
-	public function getCreatedAt(){
-		return $this->created_at;
+	public function getCreatedAt(){ 
+		return $this->dateFormat($this->created_at);
 	}
 
-	public function setCreatedAt(\DateTime $date) { 
-		$this->created_at = $date;
+	public function setCreatedAt($date){
+		$this->created_at = $this->dateFormat($date);	
+
 		return $this;
 	}
 }

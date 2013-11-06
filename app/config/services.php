@@ -15,6 +15,14 @@ use Phalcon\DI\FactoryDefault,
 $di = new FactoryDefault();
 
 /**
+ * Load router from external file
+ */
+$di->set('router', function(){
+		require __DIR__.'/routing.php';
+		return $router;
+});
+
+/**
  * The URL component is used to generate all kind of urls in the application
  */
 $di->set('url', function() use ($config) {
