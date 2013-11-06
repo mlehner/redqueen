@@ -5,7 +5,7 @@ use \Phalcon\Validation\Validator\PresenceOf;
 
 class CardForm extends \Phalcon\Forms\Form 
 { 
-	public function initialize(Card $card, $options, $edi = false) {
+	public function initialize(Cards $card, $options, $edi = false) {
 		$pin = new Text('pin');
 		$pin->addValidator(new PresenceOf(array(
 			'message' => 'Pin is required'

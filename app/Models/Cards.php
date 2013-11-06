@@ -1,6 +1,6 @@
 <?php
 
-class Card extends \Phalcon\Mvc\Model
+class Cards extends \Phalcon\Mvc\Model
 {
     /*
      * @Primary
@@ -35,7 +35,7 @@ class Card extends \Phalcon\Mvc\Model
 	}
 
 	public function initialize() {
-		$this->belongsTo("member_id", "members", "id");
+		$this->belongsTo("member_id", "Member", "id");
 
 		
 	}

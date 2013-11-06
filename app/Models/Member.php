@@ -70,8 +70,6 @@ class Member extends \Phalcon\Mvc\Model
 	}
 
 	public function initialize() { 
-		
-			
 		$this->setUpdatedAt(new \DateTime('now'));
 
 		/*
@@ -91,8 +89,7 @@ class Member extends \Phalcon\Mvc\Model
 		));
 		*/
 
-		$this->hasMany("id", "cards", "member_id");
-
+		$this->hasMany("id", "Cards", "member_id");
 	}
 
 	public function getId(){
@@ -161,10 +158,5 @@ class Member extends \Phalcon\Mvc\Model
 	public function setUpdatedAt($date){
 		$this->updated_at = $this->dateFormat($date);	
 		return $this;
-	}
-
-	public function getCards()
-	{ 
-		return $this->cards;
 	}
 }

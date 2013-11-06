@@ -6,7 +6,7 @@ class CardController extends ControllerBase {
 
 	public function newAction($member_id) {
 		$member = Member::findFirstById($member_id);
-		$card = new Card();
+		$card = new Cards();
 
 		$form = $this->view->form = new CardForm($card, array());
 

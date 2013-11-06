@@ -5,7 +5,8 @@ class MemberController extends ControllerBase
 {
     public function indexAction()
     {
-        $this->view->members = Member::find();
+		$members = Member::find();
+        $this->view->members = $members;
     }
 
     public function newAction()

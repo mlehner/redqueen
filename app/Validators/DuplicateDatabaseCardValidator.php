@@ -23,7 +23,7 @@ class DuplicateDatabaseCardValidator extends Validator implements ValidatorInter
 
 		$field = strtolower($this->field);
 
-		if (Card::findFirst("$field = '{$value}'")){
+		if (Cards::findFirst("$field = '{$value}'")){
 			$validator->appendMessage(new Message("{$this->field} must not exist", $attribute, $this->field));
 			return false;
 		}
