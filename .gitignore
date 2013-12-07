@@ -1,3 +1,5 @@
 app/cache/
 data/
 *.swp
+service/log/main
+service/**/service

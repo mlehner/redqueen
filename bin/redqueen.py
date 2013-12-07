@@ -5,6 +5,7 @@ from xbee import ZigBee
 import serial
 from struct import pack
 import argparse
+import time
 
 parser = argparse.ArgumentParser(description='RedQueen door system daemon.')
 parser.add_argument('--baud-rate', type=int, default=115200)
@@ -17,6 +18,8 @@ conn = sqlite3.connect(args.database)
 ser = serial.Serial( '/dev/%s' % args.serial_port, args.baud_rate)
 xbee = ZigBee(ser)
 
+print "BOOTED"
+
 # Continuously read and print packets
 while True:
     try:
@@ -24,12 +27,12 @@ while True:
         print response
 
         if 'rf_data' in response:
-            card, pin = response['rf_data'].split(':')
+            door_card, pin = response['rf_data'].split(':')
 
-            print "Card ", card, " PIN ", pin
+            print "Card ", door_card, " PIN ", pin
 
             c = conn.cursor()
-            c.execute('SELECT * FROM cards WHERE code = ? AND pin = ?', (code, pin))
+            c.execute('SELECT * FROM cards WHERE code = ? AND pin = ?', (door_card, pin))
             card = c.fetchone()
 
             if card == None:
@@ -39,6 +42,12 @@ while True:
                 print { 'data': pack('>bL', 0, 5) }
                 xbee.send('tx', dest_addr=response['source_addr'], dest_addr_long=response['source_addr_long'], data=pack('>bL', 0, 5))
 
+            c.close()
+
+            c = conn.cursor()
+            c.execute('INSERT INTO log VALUES (NULL, ?, ?)', ( door_card, time.asctime( time.localtime(time.time()) ) ))
+            conn.commit()
+            c.close()
     except KeyboardInterrupt:
         break
 
