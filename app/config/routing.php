@@ -2,6 +2,11 @@
 
 $router = new Phalcon\Mvc\Router();
 
+$router->add("/dashboard", array(
+    'controller' => 'index',
+    'action' => 'index'
+))->setName('dashboard');
+
 $router->add("/log", array(
     'controller' => 'index',
     'action' => 'log'
