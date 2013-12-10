@@ -32,22 +32,24 @@ while True:
             print "Card ", door_card, " PIN ", pin
 
             c = conn.cursor()
-            c.execute('SELECT * FROM cards WHERE code = ? AND pin = ?', (door_card, pin))
+            c.execute('SELECT id,pin FROM cards WHERE code = ?', (door_card, ))
             card = c.fetchone()
+            
+            valid_pin = False
 
-            if card == None:
+            if card is None:
                 print "No card found"
-            else:
-                print card
+            else if card[1] == pin:
+                print "Found card, valid pin... opening door!"
+                valid_pin = True
                 print { 'data': pack('>bL', 0, 5) }
                 xbee.send('tx', dest_addr=response['source_addr'], dest_addr_long=response['source_addr_long'], data=pack('>bL', 0, 5))
+            else:
+                print "Found card, invalid pin"
 
             c.close()
 
-            c = conn.cursor()
-            c.execute('INSERT INTO log VALUES (NULL, ?, ?)', ( door_card, time.asctime( time.localtime(time.time()) ) ))
-            conn.commit()
-            c.close()
+            c = conn.cursor().execute('INSERT INTO log VALUES (NULL, ?, ?, ?, ?)', ( card[0] if card else None, door_card, valid_pin, time.time() )).commit.close()
     except KeyboardInterrupt:
         break
 

@@ -1,34 +1,34 @@
 <?php
 
 use Phalcon\Validation\Validator,
-	Phalcon\Validation\ValidatorInterface,
-	Phalcon\Validation\Message;
+Phalcon\Validation\ValidatorInterface,
+Phalcon\Validation\Message;
 
 
 class DuplicateDatabaseCardValidator extends Validator implements ValidatorInterface { 
-	
-	private $field;
 
-	public function __construct($field = null) { 
-		if ($field === null ) { 
-			throw new \Exception('Field must be passed to validator');
-		}
+    private $field;
 
-		$this->field = $field;
-	}
+    public function __construct($field = null) { 
+        if ($field === null ) { 
+            throw new \Exception('Field must be passed to validator');
+        }
 
-	public function validate ($validator, $attribute) { 
+        $this->field = $field;
+    }
 
-		$value = $validator->getValue($attribute);
+    public function validate ($validator, $attribute) { 
 
-		$field = strtolower($this->field);
+        $value = $validator->getValue($attribute);
 
-		if (Cards::findFirst("$field = '{$value}'")){
-			$validator->appendMessage(new Message("{$this->field} must not exist", $attribute, $this->field));
-			return false;
-		}
+        $field = strtolower($this->field);
 
-		return true;
-		
-	}
+        if (Cards::findFirst("$field = '{$value}'")){
+            $validator->appendMessage(new Message("{$this->field} must not exist", $attribute, $this->field));
+            return false;
+        }
+
+        return true;
+
+    }
 }

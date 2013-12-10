@@ -26,13 +26,6 @@
                     </div>
                 </div>
 
-				<div class="control-group{{ form.hasMessagesFor('gender') ? ' error' : '' }}">
-                    <label class="control-label" for="member-name">Gender</label>
-                    <div class="controls">
-                        {{ form.render('gender') }}
-                    </div>
-                </div>
-
 
 				<div class="control-group">
 					<span class="muted" style="padding-left: 50px">Warning Changing this field will reset the users password</span>

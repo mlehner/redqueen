@@ -5,7 +5,6 @@ CREATE TABLE `cards` (
   `pin` varchar(32) NOT NULL,
   `created_at` datetime NOT NULL
 );
-CREATE TABLE log ( id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, datetime TEXT );
 CREATE TABLE `members` (
   `id` integer primary key AUTOINCREMENT,
   `name` varchar(255) NOT NULL,
@@ -16,3 +15,4 @@ CREATE TABLE `members` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 );
+CREATE TABLE log ( id integer primary key autoincrement, card_id integer, code text not null, valid_pin integer not null, datetime integer not null);

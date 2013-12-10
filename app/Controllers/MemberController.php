@@ -5,30 +5,30 @@ class MemberController extends ControllerBase
 {
     public function indexAction()
     {
-		$members = Member::find();
+        $members = Members::find();
         $this->view->members = $members;
     }
 
     public function newAction()
     {
-        $member = new Member();
+        $member = new Members();
 
         $form = $this->view->form = new NewMemberForm($member, array());
 
         if ($this->request->isPost()) {
             $form->bind($_POST, $member);
-			
+
             if ($form->isValid()) {
                 $member->setPassword($this->security->hash($member->getPassword()))
-				->setCreatedAt(new \DateTime('now'));
+                    ->setCreatedAt(new \DateTime('now'));
 
                 $member->save();
 
-				$response = new Response();
+                $response = new Response();
 
-				$this->flash->success(sprintf('Member %s successfully created', $member->getUsername()));
-				$this->view->disable();
-				return $response->redirect('member');
+                $this->flash->success(sprintf('Member %s successfully created', $member->getUsername()));
+                $this->view->disable();
+                return $response->redirect('member');
             } 
         }
     }
@@ -36,20 +36,20 @@ class MemberController extends ControllerBase
 
     public function editAction($member_id)
     {
-        $member = Member::findFirstById($member_id);
+        $member = Members::findFirstById($member_id);
 
-		$member->setPassword('');
+        $member->setPassword('');
         $form = $this->view->form = new MemberForm($member, array());
 
         if ($this->request->isPost()) {
             $form->bind($_POST, $member);
 
             if ($form->isValid()) {
-				$member->setUpdatedAt(new \DateTime('now'));
+                $member->setUpdatedAt(new \DateTime('now'));
                 $member->update();
 
-				$response = new Response();
-				return $response->redirect('member');
+                $response = new Response();
+                return $response->redirect('member');
             }
         }
     }

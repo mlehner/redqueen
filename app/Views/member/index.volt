@@ -22,7 +22,7 @@
                     <td>{{ link_to('member/edit/' ~ member.getId(), member.getName()) }}</td>
                     <td>{{ member.getUsername() }}</td>
                     <td>{{ member.getEmail() }}</td>
-                    <td>{{ member.getCards() | length }}</td>
+                    <td>{{ member.Cards | length }}</td>
                     <td>{{ link_to('member/' ~ member.getId() ~ '/card/new', 'Add Card', 'class': 'btn') }}</td>
                 </tr>
             {% endfor %}

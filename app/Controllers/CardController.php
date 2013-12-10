@@ -4,25 +4,25 @@ use \Phalcon\Http\Response;
 
 class CardController extends ControllerBase { 
 
-	public function newAction($member_id) {
-		$member = Member::findFirstById($member_id);
-		$card = new Cards();
+    public function newAction($member_id) {
+        $member = Members::findFirstById($member_id);
+        $card = new Cards();
 
-		$form = $this->view->form = new CardForm($card, array());
+        $form = $this->view->form = new CardForm($card, array());
 
-		if ($this->request->isPost()){
-			$form->bind($_POST, $card);
-			if ($form->isValid()){
-				$card->setMemberId($member_id)
-					->setCreatedAt(new \DateTime('now'));
-				
-				$card->save();
+        if ($this->request->isPost()){
+            $form->bind($_POST, $card);
+            if ($form->isValid()){
+                $card->setMemberId($member_id)
+                    ->setCreatedAt(new \DateTime('now'));
 
-				$response = new Response();
+                $card->save();
 
-				return $response->redirect('member');
-			}
-		}
-	}
+                $response = new Response();
+
+                return $response->redirect('member');
+            }
+        }
+    }
 
 }

@@ -8,5 +8,9 @@ class IndexController extends ControllerBase
 
     }
 
+    public function logAction()
+    {
+        $this->view->logs = Logs::find(array('limit' => 10));
+    }
 }
 
