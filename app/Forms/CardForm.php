@@ -1,12 +1,13 @@
 <?php
 
 use \Phalcon\Forms\Element\Text;
+use \Phalcon\Forms\Element\Password;
 use \Phalcon\Validation\Validator\PresenceOf;
 
 class CardForm extends \Phalcon\Forms\Form 
 { 
     public function initialize(Cards $card, $options, $edi = false) {
-        $pin = new Text('pin');
+        $pin = new Password('pin');
         $pin->addValidator(new PresenceOf(array(
             'message' => 'Pin is required'
         )));
