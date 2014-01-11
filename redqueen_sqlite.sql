@@ -8,11 +8,16 @@ CREATE TABLE `cards` (
 CREATE TABLE `members` (
   `id` integer primary key AUTOINCREMENT,
   `name` varchar(255) NOT NULL,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `gender` int(1) NOT NULL,
-  `password` varchar(255) NOT NULL,
+  `username` varchar(255),
+  `email` varchar(255),
+  `password` varchar(255),
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 );
-CREATE TABLE log ( id integer primary key autoincrement, card_id integer, code text not null, valid_pin integer not null, datetime integer not null);
+CREATE TABLE log ( 
+    id integer primary key autoincrement, 
+    card_id integer, 
+    code text not null, 
+    valid_pin integer not null, 
+    datetime integer not null
+);

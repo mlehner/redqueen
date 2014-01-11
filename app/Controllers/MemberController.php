@@ -9,6 +9,41 @@ class MemberController extends ControllerBase
         $this->view->members = $members;
     }
 
+    public function quickAddAction()
+    {
+        $defaults = new stdclass();
+        $defaults->code = $this->request->getQuery('code');
+
+        $form = $this->view->form = new QuickAddForm($defaults);
+
+        if ($this->request->isPost()) {
+
+            if ($form->isValid($this->request->getPost())) {
+                $member = new Members();
+                $member->setCreatedAt(new \DateTime('now'));
+                $member->setUpdatedAt(new \DateTime('now'));
+                $member->setEmail($this->request->getPost('email'));
+                $member->setName($this->request->getPost('name'));
+
+                $member->save();
+
+                $card = new Cards();
+                $card->setCreatedAt(new \DateTime('now'));
+                $card->setCode($this->request->getPost('code'));
+                $card->setPin($this->request->getPost('pin'));
+                $card->members = $member;
+
+                $card->save();
+
+                $response = new Response();
+
+                $this->flash->success(sprintf('Member %s successfully created', $member->getName()));
+                $this->view->disable();
+                return $response->redirect('member');
+            } 
+        }
+    }
+
     public function newAction()
     {
         $member = new Members();

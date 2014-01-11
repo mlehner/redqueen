@@ -5,6 +5,7 @@
             <th>Valid Pin?</th>
             <th>Date/Time</th>
             <th>Member</th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,7 @@
             <td>{{ log.wasValidPin() ? '<span class="badge badge-success">yes</span>' : '<span class="badge badge-danger">no</span>' }}</td>
             <td>{{ log.getDatetime() }}</td>
             <td>{{ log.getMemberName() }}</td>
+            <td><a href="/member/quickAdd?code={{ log.getCode() }}">Add Member</a></td>
         </tr>
         {% endfor %}
         {% if logs|length == 0 %}
