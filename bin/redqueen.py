@@ -15,7 +15,6 @@ parser.add_argument('--database', required=True)
 
 args = parser.parse_args()
 
-conn = sqlite3.connect(args.database)
 ser = serial.Serial( '/dev/%s' % args.serial_port, args.baud_rate)
 xbee = ZigBee(ser)
 
@@ -30,7 +29,12 @@ while True:
 	sys.stdout.flush()
 
         if 'rf_data' in response:
-            door_card, pin = response['rf_data'].split(':')
+            conn = sqlite3.connect(args.database)
+            cmd, data = response['rf_data'].split(':', 1)
+            if cmd != 'A':
+                continue
+
+	    door_card, pin = data.split(':')
 
             print "Card ", door_card, " PIN ", pin
             sys.stdout.flush()
@@ -59,8 +63,8 @@ while True:
             conn.commit()
 
             c.close()
+            conn.close()
     except KeyboardInterrupt:
         break
 
-conn.close()
 ser.close()
