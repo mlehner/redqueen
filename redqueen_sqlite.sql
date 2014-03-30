@@ -1,19 +1,19 @@
 CREATE TABLE `cards` (
   `id` integer primary key AUTOINCREMENT,
-  `member_id` int(11) NOT NULL,
+    `member_id` int(11) NOT NULL,
   `code` varchar(6) NOT NULL,
-  `pin` varchar(32) NOT NULL,
+    `pin` varchar(32) NOT NULL,
   `created_at` datetime NOT NULL
-);
-CREATE TABLE `members` (
+  , updated_at datetime);
+  CREATE TABLE `members` (
   `id` integer primary key AUTOINCREMENT,
-  `name` varchar(255) NOT NULL,
+    `name` varchar(255) NOT NULL,
   `username` varchar(255),
-  `email` varchar(255),
+    `email` varchar(255),
   `password` varchar(255),
-  `created_at` datetime NOT NULL,
+    `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
-);
+  );
 CREATE TABLE log ( 
     id integer primary key autoincrement, 
     card_id integer, 

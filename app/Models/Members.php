@@ -2,7 +2,7 @@
 
 use Phalcon\Mvc\Model\Behavior\Timestampable;
 
-class Members extends \Phalcon\Mvc\Model 
+class Members extends \Phalcon\Mvc\Model
 {
     /**
      * @Primary
@@ -41,23 +41,22 @@ class Members extends \Phalcon\Mvc\Model
      */
     protected $updated_at;
 
-    public function getSource()
-    {
+    public function getSource() {
         return "members";
     }
 
     /*
-     * @TODO I should be replaced 
+     * @TODO I should be replaced
      */
-    private function dateFormat($date){
-        if ($date instanceof \DateTime){ 
+    private function dateFormat($date) {
+        if ($date instanceof \DateTime) {
             return $date->format('Y-m-d H:i:s P');
-        } else { 
+        } else {
             return new \Datetime($date);
         }
     }
 
-    public function initialize() { 
+    public function initialize() {
         $this->setUpdatedAt(new \DateTime('now'));
 
         /*
@@ -72,7 +71,7 @@ class Members extends \Phalcon\Mvc\Model
                  'beforeCreate' => array(
                      'field' => 'updated_at',
                      'format' => $dateFormat()
-                 ), 
+                 ),
              )
          ));
          */
@@ -80,62 +79,74 @@ class Members extends \Phalcon\Mvc\Model
         $this->hasMany("id", "Cards", "member_id");
     }
 
-    public function getId(){
+    public function getLastLog() {
+        $query = new \Phalcon\Mvc\Model\Query("SELECT l.* FROM Logs AS l LEFT JOIN Cards AS c WHERE c.member_id = :member_id: ORDER BY l.datetime DESC LIMIT 1", $this->getDI());
+
+        $results = $query->execute(array('member_id' => $this->getId()));
+
+        if (count($results)) {
+            return $results->getFirst();
+        }
+
+        return null;
+    }
+
+    public function getId() {
         return $this->id;
     }
 
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
-    public function setName($name){ 
+    public function setName($name) {
         $this->name = $name;
         return $this;
     }
 
-    public function getUsername(){ 
+    public function getUsername() {
         return $this->username;
     }
 
-    public function setUsername($username) { 
+    public function setUsername($username) {
         $this->username = $username;
         return $this;
     }
 
-    public function getEmail() { 
+    public function getEmail() {
         return $this->email;
     }
 
-    public function setEmail($email){ 
+    public function setEmail($email) {
         $this->email = $email;
         return $this;
     }
 
-    public function getPassword(){ 
+    public function getPassword() {
         return $this->password;
     }
 
-    public function setPassword($password) { 
+    public function setPassword($password) {
         $this->password = $password;
         return $this;
     }
 
-    public function getCreatedAt(){ 
+    public function getCreatedAt() {
         return $this->dateFormat($this->created_at);
     }
 
-    public function setCreatedAt($date){
-        $this->created_at = $this->dateFormat($date);	
+    public function setCreatedAt($date) {
+        $this->created_at = $this->dateFormat($date);
 
         return $this;
     }
 
-    public function getUpdatedAt(){ 
+    public function getUpdatedAt() {
         return $this->dateFormat($this->updated_at);
     }
 
-    public function setUpdatedAt($date){
-        $this->updated_at = $this->dateFormat($date);	
+    public function setUpdatedAt($date) {
+        $this->updated_at = $this->dateFormat($date);
         return $this;
     }
 }

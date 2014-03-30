@@ -29,29 +29,42 @@ class Cards extends \Phalcon\Mvc\Model
      */
     protected $created_at;
 
-    public function getSource() 
-    {
+    /*
+     * @Column(type="string")
+     */
+    protected $updated_at;
+
+    public function getSource() {
         return "cards";
     }
 
     public function initialize() {
         $this->belongsTo("member_id", "Members", "id");
-        $this->hasMany("code", "Logs", "code");
+        $this->hasMany("id", "Logs", "card_id");
     }
 
     /*
-     * @TODO I should be replaced 
+     * @TODO I should be replaced
      */
-    private function dateFormat($date){
-        if ($date instanceof \DateTime){ 
+    private function dateFormat($date) {
+        if ($date instanceof \DateTime) {
             return $date->format('Y-m-d H:i:s P');
-        } else { 
+        } else {
             return new \Datetime($date);
         }
     }
 
+    public function getLastLog() {
+        $last_log = $this->getLogs(array('order' => 'datetime DESC', 'limit' => 1));
 
-    public function getId() { 
+        if (count($last_log)) {
+            return $last_log->getFirst();
+        }
+
+        return null;
+    }
+
+    public function getId() {
         return $this->id;
     }
 
@@ -59,35 +72,45 @@ class Cards extends \Phalcon\Mvc\Model
         return $this->member_id;
     }
 
-    public function setMemberId($id) { 
+    public function setMemberId($id) {
         $this->member_id = $id;
         return $this;
     }
 
-    public function getCode(){ 
+    public function getCode() {
         return $this->code;
     }
 
-    public function setCode($code) { 
+    public function setCode($code) {
         $this->code = $code;
         return $this;
     }
 
-    public function getPin(){
+    public function getPin() {
         return $this->pin;
     }
 
-    public function setPin($pin){
+    public function setPin($pin) {
         $this->pin = $pin;
         return $this;
     }
 
-    public function getCreatedAt(){ 
+    public function getCreatedAt() {
         return $this->dateFormat($this->created_at);
     }
 
-    public function setCreatedAt($date){
-        $this->created_at = $this->dateFormat($date);	
+    public function setCreatedAt($date) {
+        $this->created_at = $this->dateFormat($date);
+
+        return $this;
+    }
+
+    public function getUpdatedAt() {
+        return $this->dateFormat($this->updated_at);
+    }
+
+    public function setUpdatedAt($date) {
+        $this->updated_at = $this->dateFormat($date);
 
         return $this;
     }

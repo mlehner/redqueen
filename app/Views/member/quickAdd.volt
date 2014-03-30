@@ -33,7 +33,7 @@
                         {{ form.render('pin') }}
                     </div>
                 </div>
-                
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Save</button>
                     {{ link_to('member', 'Cancel', 'class':'btn') }} 

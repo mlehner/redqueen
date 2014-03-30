@@ -1,15 +1,24 @@
 <?php
 
-class NewMemberForm extends MemberForm { 
+class NewMemberForm extends MemberForm {
 
-    public function initialize(Members $member, $options, $edit = false) { 
-
+    public function initialize(Members $member, $options, $edit = false) {
         parent::initialize($member, $options, $edit);
 
-        $value = $this->get('username');
-        $value->addValidator( new DuplicateDatabaseMemberValidator('username'));
+        $username = $this->get('username');
+        $username->addValidator(new DuplicateDatabaseMemberValidator('username'));
 
-        $value = $this->get('email');
-        $value->addValidator(new DuplicateDatabaseMemberValidator('email'));
+        $email = $this->get('email');
+        $email->addValidator(new DuplicateDatabaseMemberValidator('email'));
+
+        $password = $this->get('password');
+        $password->addValidator(new PresenceOf(array(
+            'message' => 'Password is required'
+        )));
+
+        $passwordConfirm = $this->get('password_confirm');
+        $passwordConfirm->addValidator(new PresenceOf(array(
+            'message' => 'Password is required'
+        )));
     }
 }

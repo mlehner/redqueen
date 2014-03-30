@@ -4,8 +4,8 @@ use \Phalcon\Forms\Element\Text;
 use \Phalcon\Forms\Element\Password;
 use \Phalcon\Validation\Validator\PresenceOf;
 
-class CardForm extends \Phalcon\Forms\Form 
-{ 
+class CardForm extends \Phalcon\Forms\Form
+{
     public function initialize(Cards $card, $options, $edi = false) {
         $pin = new Password('pin');
         $pin->addValidator(new PresenceOf(array(
@@ -17,7 +17,8 @@ class CardForm extends \Phalcon\Forms\Form
         $code->addValidator(new PresenceOf(array(
             'message' => 'Code is required'
         )));
-        $code->addValidator(new DuplicateDatabaseCardValidator('code'));
+
+        //$code->addValidator(new DuplicateDatabaseCardValidator('code'));
         $this->add($code);
     }
 }

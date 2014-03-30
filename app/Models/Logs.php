@@ -23,19 +23,17 @@ class Logs extends \Phalcon\Mvc\Model
      * @Column(type="boolean")
      */
     protected $valid_pin;
-    
+
     /**
      * @Column(type="string")
      */
     protected $datetime;
 
-    public function getSource()
-    {
+    public function getSource() {
         return "log";
     }
 
-    public function initialize()
-    {
+    public function initialize() {
         $this->belongsTo("card_id", "Cards", "id");
     }
 

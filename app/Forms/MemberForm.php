@@ -17,12 +17,6 @@ class MemberForm extends \Phalcon\Forms\Form
         )));
         $this->add($name);
 
-        $username = new Text('username');
-        $username->addValidator(new PresenceOf(array(
-            'message' => 'Username is required'
-        )));
-        $this->add($username);
-
         $email = new Text('email');
         $email->addValidator(new Email());
         $email->addValidator(new PresenceOf(array(
@@ -35,16 +29,9 @@ class MemberForm extends \Phalcon\Forms\Form
             'message' => 'Password doesn\'t match confirmation',
             'with' => 'password_confirm'
         )));
-        $password->addValidator(new PresenceOf(array(
-            'message' => 'Password is required'
-        )));
         $this->add($password);
 
         $passwordConfirm = new Password('password_confirm');
-        $passwordConfirm->addValidator(new PresenceOf(array(
-            'message' => 'Password is required'
-        )));
-        $this->add($password);
         $this->add($passwordConfirm);
     }
 }

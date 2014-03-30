@@ -35,12 +35,10 @@ class MemberController extends ControllerBase
 
                 $card->save();
 
-                $response = new Response();
-
                 $this->flash->success(sprintf('Member %s successfully created', $member->getName()));
-                $this->view->disable();
-                return $response->redirect('member');
-            } 
+
+                $this->response->redirect('member');
+            }
         }
     }
 
@@ -51,7 +49,7 @@ class MemberController extends ControllerBase
         $form = $this->view->form = new NewMemberForm($member, array());
 
         if ($this->request->isPost()) {
-            $form->bind($_POST, $member);
+            $form->bind($this->request->getPost(), $member);
 
             if ($form->isValid()) {
                 $member->setPassword($this->security->hash($member->getPassword()))
@@ -59,35 +57,42 @@ class MemberController extends ControllerBase
 
                 $member->save();
 
-                $response = new Response();
-
                 $this->flash->success(sprintf('Member %s successfully created', $member->getUsername()));
-                $this->view->disable();
-                return $response->redirect('member');
-            } 
+
+                $this->response->redirect('member');
+            }
         }
     }
-
 
     public function editAction($member_id)
     {
         $member = Members::findFirstById($member_id);
 
-        $member->setPassword('');
-        $form = $this->view->form = new MemberForm($member, array());
+        $form = new MemberForm($member, array());
 
         if ($this->request->isPost()) {
-            $form->bind($_POST, $member);
+            $values = $this->request->getPost();
 
-            if ($form->isValid()) {
+            if ($form->isValid($values)) {
+                if (strlen($values['password']) > 0) {
+                    $member->setPassword($this->security->hash($values['password']));
+                }
+
                 $member->setUpdatedAt(new \DateTime('now'));
-                $member->update();
+                $member->save($values, array(
+                    'name',
+                    'email'
+                ));
 
-                $response = new Response();
-                return $response->redirect('member');
+                $this->flash->success(sprintf("Member %s successfully updated.", $member->getName()));
+
+                $this->response->redirect('member');
+            } else {
+                $this->flash->error('Invalid form.');
             }
         }
-    }
 
+        $this->view->form = $form;
+    }
 }
 

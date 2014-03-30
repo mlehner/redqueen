@@ -1,12 +1,14 @@
 <?php
 
 use Phalcon\DI\FactoryDefault,
-Phalcon\Mvc\View,
-Phalcon\Mvc\Url as UrlResolver,
-Phalcon\Mvc\View\Engine\Volt as VoltEngine,
-Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter,
-Phalcon\Mvc\Router\Annotations as RouterAnnotations,
-Phalcon\Session\Adapter\Files as SessionAdapter;
+    Phalcon\Flash\Direct as Flash,
+    Phalcon\Flash\Session as FlashSession,
+    Phalcon\Mvc\View,
+    Phalcon\Mvc\Url as UrlResolver,
+    Phalcon\Mvc\View\Engine\Volt as VoltEngine,
+    Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter,
+    Phalcon\Mvc\Router\Annotations as RouterAnnotations,
+    Phalcon\Session\Adapter\Files as SessionAdapter;
 
 /**
  * The FactoryDefault Dependency Injector automatically register the right services providing a full stack framework
@@ -90,7 +92,7 @@ $di->set('modelsMetadata', function() {
 /**
  * Re-register Security for more control over workfactor
  */
-$di->set('security', function() { 
+$di->set('security', function() {
     $security = new Phalcon\Security();
 
     $security->setWorkFactor(15);
@@ -106,4 +108,23 @@ $di->set('session', function() {
     $session = new SessionAdapter();
     $session->start();
     return $session;
+});
+
+/**
+ * Flash service with custom CSS classes
+ */
+$di->set('flash', function () {
+    return new Flash(array(
+        'error' => 'alert alert-error',
+        'success' => 'alert alert-success',
+        'notice' => 'alert alert-info'
+    ));
+});
+
+$di->set('flashSession', function () {
+    return new FlashSession(array(
+        'error' => 'alert alert-error',
+        'success' => 'alert alert-success',
+        'notice' => 'alert alert-info'
+    ));
 });
