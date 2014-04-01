@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec /usr/bin/chpst -u logger /usr/bin/svlogd -tt main

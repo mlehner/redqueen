@@ -1,6 +1,0 @@
-#!/bin/sh
-
-. /etc/redqueen.conf
-
-exec 2>&1
-exec chpst -U pi $REDQUEEN_DAEMON --database $REDQUEEN_DATABASE
